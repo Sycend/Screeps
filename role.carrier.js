@@ -1,12 +1,3 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('role.carrier');
- * mod.thing == 'a thing'; // true
- */
-
 module.exports = {
     run: function (creep) {
         if (creep.memory.working == true && creep.carry.energy == 0) {
@@ -19,11 +10,26 @@ module.exports = {
             creep.memory.working = true;
         }
         if (creep.memory.working == true) {
-            creep.putEnergy(false,true,true);
+
+
+            creep.putEnergy(false, true, true);
+
         }
         // if creep is supposed to get energy from source
         else {
-            creep.getEnergy(true, true, false);
+            let structure = null;
+            structure = creep.room.find(FIND_MY_STRUCTURES, {
+                filter: s => (s.structureType == STRUCTURE_SPAWN
+                    || s.structureType == STRUCTURE_TOWER
+                    || s.structureType == STRUCTURE_EXTENSION)
+                    && s.energy < s.energyCapacity
+            });
+
+            if (structure != "") {
+                creep.getEnergy(true, true, false);
+            } else {
+                creep.getEnergy(true, false, false);
+            }
         }
     }
 };

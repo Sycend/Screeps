@@ -20,7 +20,7 @@ module.exports = {
             var percentage = 0.0003;
             var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (s) => s.structureType == STRUCTURE_WALL
-                    || s.structureType == STRUCTURE_RAMPART
+                  //  || s.structureType == STRUCTURE_RAMPART
                     && s.hits / s.hitsMax < percentage
             });
 

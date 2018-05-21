@@ -1,28 +1,26 @@
 var roles = {
     H: require('role.harvester'),
-    HH: require('role.hollowHarvester'),
+    M: require('role.miner'),
     U: require('role.upgrader'),
     B: require('role.builder'),
     R: require('role.repairer'),
     WR: require('role.wallRepairer'),
     C: require('role.carrier'),
-    LDH: require('role.longDistanceHarvester')
-
+    LDH: require('role.longDistanceHarvester'),
+    CL: require('role.claimer')
 };
 
-Creep.prototype.runRole =
-    function () {
-        roles[this.memory.role].run(this);
-    };
+Creep.prototype.runRole = function () {
+    roles[this.memory.role].run(this);
+};
 
 
-Creep.prototype.attack =
-    function () {
-        var enemies = this.room.find(Game.HOSTILE_CREEPS);
-        console.log('Attacker found @ ' + this.room.name + ': ' + Game.HOSTILE_CREEPS);
-        this.moveTo(enemies[0]);
-        this.attack(enemies[0]);
-    }
+Creep.prototype.attack = function () {
+    var enemies = this.room.find(Game.HOSTILE_CREEPS);
+    console.log('Attacker found @ ' + this.room.name + ': ' + Game.HOSTILE_CREEPS);
+    this.moveTo(enemies[0]);
+    this.attack(enemies[0]);
+}
 
 
 Creep.prototype.putEnergy = function (useContainer, useStorage, useBase, ) {
@@ -35,7 +33,7 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase, ) {
     if (useStorage && structure == undefined) {
         structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (s) => (s.structureType == STRUCTURE_STORAGE
-                //&& s.energy < s.energyCapacity
+                // && s.energy < s.energyCapacity
             )
         });
         if (structure != undefined) {
@@ -69,52 +67,64 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase, ) {
     }
 }
 
-Creep.prototype.getEnergy =
-    function (useContainer, useStorage, useSource) {
-        /** @type {StructureContainer} */
-        let structure = null;
-        // if the Creep should look for containers
-        if (useContainer && structure == undefined) {
-            // find closest container
-            structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: s => (s.structureType == STRUCTURE_CONTAINER)
-                    && s.store[RESOURCE_ENERGY] > 0
-            });
+Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
 
-        }
-        if (useStorage && structure == undefined) {
-            // find closest container
-            structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: s => (s.structureType == STRUCTURE_STORAGE)
-                    && s.store[RESOURCE_ENERGY] > 0
-            });
-            // if one was found
-            if (structure != undefined) {
-                // try to withdraw energy, if the container is not in range
+    let structure = null;
+    // if the Creep should look for containers
+    useLoot = useContainer;
+    if (useLoot && structure == undefined) {
+        loot = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
 
-            }
-        }
-        // if no container was found and the Creep should look for Sources
-        if (useSource) {
-            // find closest source
-            var source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+        if (this.pickup(loot) != OK) {
 
-            // try to harvest energy, if the source is not in range
-            if (this.harvest(source) == ERR_NOT_IN_RANGE) {
-                // move towards it
-                this.moveTo(source, { maxRooms: 1 });
-            }
+            this.moveTo(loot);
+        } else {
+            this.say("Loot! o.o")
         }
+
+    }
+    if (useContainer && structure == undefined) {
+        // find closest container
+        structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: s => (s.structureType == STRUCTURE_CONTAINER)
+                && s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
+        });
+
+    }
+    if (useStorage && structure == undefined) {
+        // find closest container
+        structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: s => (s.structureType == STRUCTURE_STORAGE)
+                && s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
+        });
         // if one was found
         if (structure != undefined) {
             // try to withdraw energy, if the container is not in range
-            if (this.withdraw(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                // move towards it
-                this.moveTo(structure, { maxRooms: 1 });
-            }
-        }
 
-    };
+        }
+    }
+    // if no container was found and the Creep should look for Sources
+    if (useSource) {
+        // find closest source
+        var source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+
+        // try to harvest energy, if the source is not in range
+        if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+            // move towards it
+            this.moveTo(source, { maxRooms: 1 });
+        }
+    }
+    // if one was found
+
+    if (structure != undefined) {
+        // try to withdraw energy, if the container is not in range
+        if (this.withdraw(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            // move towards it
+            this.moveTo(structure, { maxRooms: 1 });
+        }
+    }
+
+};
 
 function putInBase(creep, useBase, structure) {
     if (useBase && structure == undefined) {

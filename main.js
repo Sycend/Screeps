@@ -18,7 +18,6 @@ module.exports.loop = function () {
     triggerCreepSpawns();
 };
 
-//asdasd
 function triggerCreepSpawns() {
     /// <summary>
     /// Run spawn logic.
