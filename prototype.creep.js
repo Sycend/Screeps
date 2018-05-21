@@ -135,15 +135,26 @@ Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
 
 function putInBase(creep, useBase, structure) {
     if (useBase && structure == undefined) {
-        structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-            // the second argument for findClosestByPath is an object which takes
-            // a property called filter which can be a function
-            // we use the arrow operator to define it
-            filter: (s) => ((s.structureType == STRUCTURE_SPAWN
-                || s.structureType == STRUCTURE_TOWER
-                || s.structureType == STRUCTURE_EXTENSION)
-                && s.energy < s.energyCapacity)
-        });
+        if (creep.memory.role != 'H') {
+            structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+                // the second argument for findClosestByPath is an object which takes
+                // a property called filter which can be a function
+                // we use the arrow operator to define it
+                filter: (s) => ((s.structureType == STRUCTURE_SPAWN
+                    || s.structureType == STRUCTURE_TOWER
+                    || s.structureType == STRUCTURE_EXTENSION)
+                    && s.energy < s.energyCapacity)
+            });
+        } else {
+            structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+                // the second argument for findClosestByPath is an object which takes
+                // a property called filter which can be a function
+                // we use the arrow operator to define it
+                filter: (s) => ((s.structureType == STRUCTURE_SPAWN
+                    || s.structureType == STRUCTURE_EXTENSION)
+                    && s.energy < s.energyCapacity)
+            });
+        }
     }
     return structure;
 }

@@ -9,7 +9,6 @@ module.exports.loop = function () {
     /// <summary>
     /// Main iteration Loop
     /// </summary>
-
     cleanMemory();
 
     triggerCreepsRoles();
