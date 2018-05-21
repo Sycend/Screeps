@@ -18,7 +18,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
         numberOfCreeps[role] = _.sum(creepsInRoom, (c) => c.memory.role == role);
     }
     let maxEnergy = room.energyCapacityAvailable;
-    //let name = undefined;
+
 
 
     // setup some minimum numbers for different roles
@@ -45,7 +45,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 
     var roomEnergyCapacity = this.room.energyCapacityAvailable;
     var name = null;
-    var totalNumberCreepsSpawned = Memory.numberOfCreep;
+    
 
     // if not enough harvesters
     if (numberOfCreeps['H'] < minimumNumberOfHarvesters && numberOfCreeps['C'] < 1) {
@@ -53,19 +53,19 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 
             // try to spawn one
 
-            name = this.createCustomCreep(roomEnergyCapacity, 'H', totalNumberCreepsSpawned);
+            name = this.createCustomCreep(roomEnergyCapacity, 'H');
             // If spawning failed and we have no harvesters left
             if (name == ERR_NOT_ENOUGH_ENERGY) {
                 // Spawn one with what is available
-                name = this.createCustomCreep(this.room.energyAvailable, 'H', totalNumberCreepsSpawned);
+                name = this.createCustomCreep(this.room.energyAvailable, 'H');
                 console.log(this.room.energyAvailable);
             }
         } else {
             // Spawn a C  if M exists.
-            name = this.createCustomCreep(roomEnergyCapacity, 'C', totalNumberCreepsSpawned);
+            name = this.createCustomCreep(roomEnergyCapacity, 'C');
             if (name == ERR_NOT_ENOUGH_ENERGY) {
                 // Spawn one with what is available
-                name = this.createCustomCreep(this.room.energyAvailable, 'C', totalNumberCreepsSpawned);
+                name = this.createCustomCreep(this.room.energyAvailable, 'C');
                 console.log(this.room.energyAvailable);
             }
         }
@@ -86,7 +86,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
                 // if there is a container next to the source
                 if (containers.length > 0) {
                     // spawn a miner
-                    name = this.createCustomCreep(roomEnergyCapacity, 'M', totalNumberCreepsSpawned, source.id);
+                    name = this.createCustomCreep(roomEnergyCapacity, 'M', source.id);
                 }
                 break;
             }
@@ -100,43 +100,43 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
     // if not enough carriers
     else if (numberOfCreeps['C'] < minimumNumberOfCarrier) {
         // try to spawn one
-        name = this.createCustomCreep(roomEnergyCapacity, 'C', totalNumberCreepsSpawned);
+        name = this.createCustomCreep(roomEnergyCapacity, 'C');
     }
     // if not enough longDistanceHarvesters for W7N4
     else if (numberOfLongDistanceHarvestersW7N4 < minimumNumberOfLongDistanceHarvestersW7N4) {
 
         // try to spawn one
-        name = this.createLongDistanceHarvester(roomEnergyCapacity, 2, HOME, 'W7N4', 0, totalNumberCreepsSpawned);
+        name = this.createLongDistanceHarvester(roomEnergyCapacity, 2, HOME, 'W7N4', 0);
 
     }
     else if (numberOfLongDistanceHarvestersW8N3 < minimumNumberOfLongDistanceHarvestersW8N3) {
         // try to spawn one
-        name = this.createLongDistanceHarvester(roomEnergyCapacity, 2, HOME, 'W8N3', 0, totalNumberCreepsSpawned);
+        name = this.createLongDistanceHarvester(roomEnergyCapacity, 2, HOME, 'W8N3', 0);
     }
     else if (numberOfLongDistanceHarvestersW6N3 < minimumNumberOfLongDistanceHarvestersW6N3) {
         // try to spawn one
-        name = this.createLongDistanceHarvester(roomEnergyCapacity, 2, HOME, 'W6N3', 0, totalNumberCreepsSpawned);
+        name = this.createLongDistanceHarvester(roomEnergyCapacity, 2, HOME, 'W6N3', 0);
     }
     // if not enough upgraders
     else if (numberOfCreeps['U'] < minimumNumberOfUpgraders) {
         // try to spawn one
-        name = this.createCustomCreep(roomEnergyCapacity, 'U', totalNumberCreepsSpawned);
+        name = this.createCustomCreep(roomEnergyCapacity, 'U');
     }
     // if not enough repairers
     else if (numberOfCreeps['R'] < minimumNumberOfRepairers) {
         // try to spawn one
-        name = this.createCustomCreep(roomEnergyCapacity, 'R', totalNumberCreepsSpawned);
+        name = this.createCustomCreep(roomEnergyCapacity, 'R');
     }
     // if not enough builders
     else if (numberOfCreeps['B'] < minimumNumberOfBuilders) {
         // try to spawn one
-        name = this.createCustomCreep(roomEnergyCapacity, 'B', totalNumberCreepsSpawned);
+        name = this.createCustomCreep(roomEnergyCapacity, 'B');
     }
 
     // if not enough wallRepairers
     else if (numberOfCreeps['WR'] < minimumNumberOfWallRepairers) {
         // try to spawn one
-        name = this.createCustomCreep(roomEnergyCapacity, 'WR', totalNumberCreepsSpawned);
+        name = this.createCustomCreep(roomEnergyCapacity, 'WR');
     }
     // if evrything exists
     else {
@@ -156,12 +156,20 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 
 
 module.exports = function () {
-    // create a new function for StructureSpawn
-    StructureSpawn.prototype.createCustomCreep = function (energy, roleName, creepNumber, sourceId = null) {
+    /**
+     * Spawns a creep.
+     * @param energy maximum energy for spawning.
+     * @param roleName name of Role @see listOfRoles .
+     * @param creepNumber
+     * @param sourceId = null
+     * @returns
+     */
+    StructureSpawn.prototype.createCustomCreep = function (energy, roleName, sourceId = null) {
+        let creepNumber = Memory.numberOfCreep;
         if (roleName == 'M') {
             var numberOfParts = Math.floor((energy - 50) / 100);
             var body = [];
-
+            
             // create maximum work-parts but maximal 10. For greatest efficency.
             for (let i = 0; (i < numberOfParts) && (i < 10); i++) {
                 body.push(WORK);
@@ -220,8 +228,8 @@ module.exports = function () {
         return this.createCreep(body, creepNumber + '-' + roleName, { role: roleName, working: false, sourceId: sourceId });
     };
     // create a new function for StructureSpawn
-    StructureSpawn.prototype.createLongDistanceHarvester = function (energy, numberOfWorkParts, home, target, sourceIndex, creepNumber) {
-
+    StructureSpawn.prototype.createLongDistanceHarvester = function (energy, numberOfWorkParts, home, target, sourceIndex) {
+        let creepNumber = Memory.numberOfCreep;
         // create a body with the specified number of WORK parts and one MOVE part per non-MOVE part
         var body = [];
         for (let i = 0; i < numberOfWorkParts; i++) {
