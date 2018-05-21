@@ -61,7 +61,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
 
         } else if (numberOfCreeps['M'] < minimumNumberOfMiners) {
             // try to spawn one
-
+            console.log("boi");
             // check if all sources have miners
             let sources = room.find(FIND_SOURCES);
             // iterate over all sources
@@ -75,7 +75,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                     // if there is a container next to the source
                     if (containers.length > 0) {
                         // spawn a miner
-                        name = this.createCustomCreep(energy, 'M', totalNumberCreepsSpawned);
+                        name = this.createCustomCreep(energy, 'M', totalNumberCreepsSpawned, source.id);
 
                     }
                     break;
@@ -151,7 +151,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
 
 module.exports = function () {
     // create a new function for StructureSpawn
-    StructureSpawn.prototype.createCustomCreep = function (energy, roleName, creepNumber) {
+    StructureSpawn.prototype.createCustomCreep = function (energy, roleName, creepNumber, sourceId=null) {
         if (roleName == 'M') {
             var numberOfParts = Math.floor((energy - 50) / 100);
             var body = [];

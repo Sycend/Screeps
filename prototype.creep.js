@@ -72,8 +72,6 @@ Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
     structure = this.room.find(FIND_MY_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_STORAGE) });
     if (structure == "") {
         useContainer = true;
-    } else {
-        
     }
 
 
