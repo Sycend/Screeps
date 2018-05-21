@@ -68,9 +68,17 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase, ) {
 }
 
 Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
-
     let structure = null;
-    // if the Creep should look for containers
+    structure = this.room.find(FIND_MY_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_STORAGE) });
+    if (structure == "") {
+        useContainer = true;
+    } else {
+        
+    }
+
+
+    structure = null;
+    // if the Creep should look for loot
     useLoot = useContainer;
     if (useLoot && structure == undefined) {
         loot = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
@@ -83,6 +91,7 @@ Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
         }
 
     }
+    // if the Creep should look for containers
     if (useContainer && structure == undefined) {
         // find closest container
         structure = this.pos.findClosestByPath(FIND_STRUCTURES, {

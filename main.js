@@ -2,6 +2,7 @@
 require('prototype.spawn')();
 require('prototype.creep');
 require('prototype.tower');
+require('RoomVisual');
 //require('screeps');
 
 module.exports.loop = function () {
