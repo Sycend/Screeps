@@ -1,65 +1,64 @@
-// import modules
 require('prototype.spawn')();
 require('prototype.creep');
 require('prototype.tower');
 require('RoomVisual');
-//require('screeps');
 
+
+/**
+ *  Main iteration Loop.
+ */
 module.exports.loop = function () {
-    /// <summary>
-    /// Main iteration Loop
-    /// </summary>
-    cleanMemory();
+	cleanMemory();
 
-    triggerCreepsRoles();
+	triggerCreepsRoles();
 
-    triggerTurretRole();
+	triggerTurretRole();
 
-    triggerCreepSpawns();
+	triggerCreepSpawns();
 };
 
+/**
+ * Run spawn logic.
+ */
 function triggerCreepSpawns() {
-    /// <summary>
-    /// Run spawn logic.
-    /// </summary>
-    // for each spawn
-    for (let spawnName in Game.spawns) {
-        // run spawn logic
-        Game.spawns[spawnName].spawnCreepsIfNecessary();
-    }
+	// For each spawn
+	for (let allSpawns in Game.spawns) {
+		// Run spawn logic.
+		Game.spawns[allSpawns].spawnCreepsIfNecessary();
+	}
 }
 
+/**
+ * Run turret logic for each turret.
+ */
 function triggerTurretRole() {
-    /// <summary>
-    /// Run turret logic for each turret.
-    /// </summary>
-    // find all towers
-    var towers = _.filter(Game.structures, s => s.structureType == STRUCTURE_TOWER);
-    // for each tower
-    for (let tower of towers) {
-        // run tower logic
-        tower.defend();
-    }
+	// Find all towers.
+	var allTowers = _.filter(Game.structures, s => s.structureType == STRUCTURE_TOWER);
+	// for each tower.
+	for (let tower of allTowers) {
+		// run tower logic
+		tower.defend();
+	}
 }
 
+/**
+ * For each creep run role logic.
+ */
 function triggerCreepsRoles() {
-    /// <summary>
-    /// for each creep run role logic.
-    /// </summary>
-    for (let name in Game.creeps) {
-        Game.creeps[name].runRole();
-    }
+	for (let allCreeps in Game.creeps) {
+		Game.creeps[allCreeps].runRole();
+	}
 }
 
+/**
+ * Check for memory entries of died creeps by iterating over Memory.creeps.
+ */
 function cleanMemory() {
-    /// <summary>
-    /// Check for memory entries of died creeps by iterating over Memory.creeps.
-    /// </summary>
-    for (let name in Memory.creeps) {
-        // and checking if the creep is still alive
-        if (Game.creeps[name] == undefined) {
-            // if not, delete the memory entry
-            delete Memory.creeps[name];
-        }
-    }
+	for (let allSavedCreeps in Memory.creeps) {
+		// Checking if the creep is still alive.
+		if (Game.creeps[allSavedCreeps] == undefined) {
+			// If not, delete the memory entry.
+			delete Memory.creeps[allSavedCreeps];
+		}
+	}
 }
