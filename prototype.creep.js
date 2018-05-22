@@ -1,160 +1,166 @@
 var roles = {
-    H: require('role.harvester'),
-    M: require('role.miner'),
-    U: require('role.upgrader'),
-    B: require('role.builder'),
-    R: require('role.repairer'),
-    WR: require('role.wallRepairer'),
-    C: require('role.carrier'),
-    LDH: require('role.longDistanceHarvester'),
-    CL: require('role.claimer')
+	H: require('role.harvester'),
+	M: require('role.miner'),
+	U: require('role.upgrader'),
+	B: require('role.builder'),
+	R: require('role.repairer'),
+	WR: require('role.wallRepairer'),
+	C: require('role.carrier'),
+	LDH: require('role.longDistanceHarvester'),
+	CL: require('role.claimer')
 };
 
+/**
+ * Execute role for each creep.
+ */
 Creep.prototype.runRole = function () {
-    roles[this.memory.role].run(this);
+	roles[this.memory.role].run(this);
 };
 
-
+/**
+ * Attacks enemy if in room.
+ */
 Creep.prototype.attack = function () {
-    var enemies = this.room.find(Game.HOSTILE_CREEPS);
-    console.log('Attacker found @ ' + this.room.name + ': ' + Game.HOSTILE_CREEPS);
-    this.moveTo(enemies[0]);
-    this.attack(enemies[0]);
+	var enemies = this.room.find(Game.HOSTILE_CREEPS);
+	console.log('Attacker found @ ' + this.room.name + ': ' + Game.HOSTILE_CREEPS);
+	this.moveTo(enemies[0]);
+	this.attack(enemies[0]);
 }
 
-
+/**
+ * Put energy in container/storage/base.
+ * @param useContainer Can use Container.
+ * @param useStorage Can use Storage.
+ * @param useBase Can use Base.
+ */
 Creep.prototype.putEnergy = function (useContainer, useStorage, useBase, ) {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="useContainer"></param>
-    let structure = null
-    structure = putInBase(this, useBase, structure);
-    if (useStorage && structure == undefined) {
-        structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: (s) => (s.structureType == STRUCTURE_STORAGE
-                // && s.energy < s.energyCapacity
-            )
-        });
-        if (structure != undefined) {
-            useContainer = true;
-        }
-    }
-    if (useContainer && structure == undefined) {
-        // find closest spawn, extension or tower which is not full
-        structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-            // the second argument for findClosestByPath is an object which takes
-            // a property called filter which can be a function
-            // we use the arrow operator to define it
+	let structure = null
+	structure = putInBase(this, useBase, structure);
+	if (useStorage && structure == undefined) {
+		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
+			filter: (s) => (s.structureType == STRUCTURE_STORAGE
+				// && s.energy < s.energyCapacity
+			)
+		});
+		if (structure != undefined) {
+			useContainer = true;
+		}
+	}
+	if (useContainer && structure == undefined) {
+		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
+			filter: (s) => (s.structureType == STRUCTURE_CONTAINER
+				&& _.sum(s.store) < s.storeCapacity
+			)
+		});
+		if (structure != undefined) {
+			structure = putInBase(this, true, structure);
+		}
+	}
 
-            filter: (s) => (s.structureType == STRUCTURE_CONTAINER
-                && _.sum(s.store) < s.storeCapacity
-            )
-        });
-        if (structure != undefined) {
-            structure = putInBase(this, true, structure);
-        }
-    }
-
-
-    // if we found one
-    if (structure != undefined) {
-        // try to transfer energy, if it is not in range
-        if (this.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            // move towards it
-            this.moveTo(structure, { maxRooms: 1 });
-        }
-    }
+	// If creep found one.
+	if (structure != undefined) {
+		// Try to transfer energy.
+		if (this.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+			// If it is not in range move towards it.
+			this.moveTo(structure, { maxRooms: 1 });
+		}
+	}
 }
-
+/**
+ * Collect energy from loot/container/storage/source.
+ * @param useContainer Can use Container.
+ * @param useStorage Can use Storage.
+ * @param useSource Can use Source.
+ */
 Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
-    let structure = null;
-    structure = this.room.find(FIND_MY_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_STORAGE) });
-    if (structure == "") {
-        useContainer = true;
-    }
+	let structure = null;
+	structure = this.room.find(FIND_MY_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_STORAGE) });
+	if (structure == "") {
+		useContainer = true;
+	}
+	structure = null;
+	// If the creep should look for loot.
+	useLoot = useContainer;
+	if (useLoot && structure == undefined) {
+		loot = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
+		if (this.pickup(loot) != OK) {
+			this.moveTo(loot);
+		} else {
+			this.say("Loot! o.o")
+		}
+	}
 
+	// If the creep should look for containers.
+	if (useContainer && structure == undefined) {
+		// find closest container.
+		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
+			filter: s => (s.structureType == STRUCTURE_CONTAINER)
+				&& s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
+		});
+	}
 
-    structure = null;
-    // if the Creep should look for loot
-    useLoot = useContainer;
-    if (useLoot && structure == undefined) {
-        loot = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
+	// If the creep should look for storages.
+	if (useStorage && structure == undefined) {
+		// find closest storage.
+		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
+			filter: s => (s.structureType == STRUCTURE_STORAGE)
+				&& s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
+		});
+	}
 
-        if (this.pickup(loot) != OK) {
+	// If the creep should look for sources.
+	if (useSource) {
+		// find closest source
+		var source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
 
-            this.moveTo(loot);
-        } else {
-            this.say("Loot! o.o")
-        }
+		// try to harvest energy, if the source is not in range
+		if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+			// move towards it
+			this.moveTo(source, { maxRooms: 1 });
+		}
+	}
 
-    }
-    // if the Creep should look for containers
-    if (useContainer && structure == undefined) {
-        // find closest container
-        structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: s => (s.structureType == STRUCTURE_CONTAINER)
-                && s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
-        });
-
-    }
-    if (useStorage && structure == undefined) {
-        // find closest container
-        structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: s => (s.structureType == STRUCTURE_STORAGE)
-                && s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
-        });
-        // if one was found
-        if (structure != undefined) {
-            // try to withdraw energy, if the container is not in range
-
-        }
-    }
-    // if no container was found and the Creep should look for Sources
-    if (useSource) {
-        // find closest source
-        var source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-
-        // try to harvest energy, if the source is not in range
-        if (this.harvest(source) == ERR_NOT_IN_RANGE) {
-            // move towards it
-            this.moveTo(source, { maxRooms: 1 });
-        }
-    }
-    // if one was found
-
-    if (structure != undefined) {
-        // try to withdraw energy, if the container is not in range
-        if (this.withdraw(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            // move towards it
-            this.moveTo(structure, { maxRooms: 1 });
-        }
-    }
-
+	// If creep found something.
+	if (structure != undefined) {
+		// try to withdraw energy, if the container is not in range
+		if (this.withdraw(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+			// move towards it
+			this.moveTo(structure, { maxRooms: 1 });
+		}
+	} else {
+		this.say("Zzz");
+	}
 };
 
+/**
+ * Finds structure spawn/tower/extension.
+ * @param creep Creep that should do the job.
+ * @param useBase Creep should use Base.
+ * @param structure Previous structures.
+ * @returns structure with spawn/tower/extension.
+ */
 function putInBase(creep, useBase, structure) {
-    if (useBase && structure == undefined) {
-        if (creep.memory.role != 'H') {
-            structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                // the second argument for findClosestByPath is an object which takes
-                // a property called filter which can be a function
-                // we use the arrow operator to define it
-                filter: (s) => ((s.structureType == STRUCTURE_SPAWN
-                    || s.structureType == STRUCTURE_TOWER
-                    || s.structureType == STRUCTURE_EXTENSION)
-                    && s.energy < s.energyCapacity)
-            });
-        } else {
-            structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                // the second argument for findClosestByPath is an object which takes
-                // a property called filter which can be a function
-                // we use the arrow operator to define it
-                filter: (s) => ((s.structureType == STRUCTURE_SPAWN
-                    || s.structureType == STRUCTURE_EXTENSION)
-                    && s.energy < s.energyCapacity)
-            });
-        }
-    }
-    return structure;
+	if (useBase && structure == undefined) {
+		if (creep.memory.role != 'H') {
+			structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+				// the second argument for findClosestByPath is an object which takes
+				// a property called filter which can be a function
+				// we use the arrow operator to define it
+				filter: (s) => ((s.structureType == STRUCTURE_SPAWN
+					|| s.structureType == STRUCTURE_TOWER
+					|| s.structureType == STRUCTURE_EXTENSION)
+					&& s.energy < s.energyCapacity)
+			});
+		} else {
+			structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+				// the second argument for findClosestByPath is an object which takes
+				// a property called filter which can be a function
+				// we use the arrow operator to define it
+				filter: (s) => ((s.structureType == STRUCTURE_SPAWN
+					|| s.structureType == STRUCTURE_EXTENSION)
+					&& s.energy < s.energyCapacity)
+			});
+		}
+	}
+	return structure;
 }
