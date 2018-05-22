@@ -1,21 +1,22 @@
 module.exports = {
-    // a function to run the logic for this role
+	/**
+	 * Logic of miner.
+	 * @param creep Creep that should do that job.
+	 */
     run: function (creep) {
-        // get source
-        let source = Game.getObjectById(creep.memory.sourceId);
-        // find container next to source
-        let container = source.pos.findInRange(FIND_STRUCTURES, 1, {
+        // Get source.
+        let sourceId = Game.getObjectById(creep.memory.sourceId);
+        // Find container next to source.
+        let container = sourceId.pos.findInRange(FIND_STRUCTURES, 1, {
             filter: s => s.structureType == STRUCTURE_CONTAINER
         })[0];
-
-        // if creep is on top of the container
-        if (creep.pos.isEqualTo(container.pos)) {
-            // harvest source
-            creep.harvest(source);
-        }
-        // if creep is not on top of the container
-        else {
-            // move towards it
+		        
+		if (creep.pos.isEqualTo(container.pos)) {
+			// If creep is on top of the container.
+            // Harvest source.
+            creep.harvest(sourceId);
+        }		else {
+			 // If creep is not on top of the container.
             creep.moveTo(container);
         }
     }
