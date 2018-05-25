@@ -34,7 +34,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	var minimumNumberOfLongDistanceHarvestersW7N4 = 3;
 	var minimumNumberOfLongDistanceHarvestersW8N3 = 3;
 	var minimumNumberOfLongDistanceHarvestersW6N3 = 3;
-	var minimumNumberOfCarrier = 3;
+	var minimumNumberOfCarrier = 6;
 	var minimumNumberOfClaimer = 0;
 
 
@@ -95,7 +95,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 		}
 	} else if (numberOfCreeps['CL'] < minimumNumberOfClaimer) {
 		nameOfSpawnedCreep = this.createClaimer(totalNumberCreepsSpawned, 'W8N3');
-	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier) {
+	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier/2) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
 	} else if (numberOfLongDistanceHarvestersW7N4 < minimumNumberOfLongDistanceHarvestersW7N4) {
 		nameOfSpawnedCreep = this.createLongDistanceHarvester(roomEnergyCapacity, 3,  'W7N4', 0);
@@ -111,6 +111,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'B');
 	} else if (numberOfCreeps['WR'] < minimumNumberOfWallRepairers) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'WR');
+	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier) {
+		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
 	} else {
 		room.visual.speech('All creeps exists.', 39, 15);
 	}
