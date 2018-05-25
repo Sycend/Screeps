@@ -62,10 +62,14 @@ function triggerTurretRole() {
  * For each creep run role logic.
  */
 function triggerCreepsRoles() {
-	for (let creep in Game.creeps) {
-		if (creep.spawning == false) {
-			Game.creeps[creep].runRole();
+	for (let oneCreep in Game.creeps) {
+		if (oneCreep.spawning) {
+			console.log( "hio");
 		}
+		
+	//	if (creep.spawning == false) {
+			Game.creeps[oneCreep].runRole();
+	//	}
 	}
 }
 

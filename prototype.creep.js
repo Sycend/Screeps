@@ -112,7 +112,7 @@ Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
 			this.moveTo(structure, { maxRooms: 1 });
 		}
 	} else {
-		this.say("Zzz");
+		this.say("?");
 	}
 };
 
