@@ -118,13 +118,14 @@ function withdrawEnergyFromStructure(creep, structure) {
 		// try to withdraw energy
 		let withdrawReturnMessage = creep.withdraw(structure, RESOURCE_ENERGY);
 		if (withdrawReturnMessage == OK) {
-			return OK;
+			
 		} else if (withdrawReturnMessage == ERR_NOT_IN_RANGE) {
 			// If the container is not in range, move towards it.
 			creep.moveTo(withdrawReturnMessage, { maxRooms: 1 });
 		} else {
 			creep.say("Error: " + withdrawReturnMessage);
 		}
+		return withdrawReturnMessage;
 	} else {
 		creep.say("?");
 		return null;
@@ -148,13 +149,14 @@ function findAndPickUpLoot(creep) {
  * @param structure 
  * @returns transfer message.
  */
-function transferEnergyToStorage(creep, structure) {
-	structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+function transferEnergyToStorage(creep) {
+	let structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 		filter: (s) => (s.structureType == STRUCTURE_STORAGE
 			// && s.energy < s.energyCapacity
 		)
 	});
 	transferReturnMessage = transferEnergyToStructure(creep, structure, true);
+	creep.say(transferReturnMessage);
 	return transferReturnMessage;
 }
 
@@ -219,7 +221,7 @@ function transferEnergyToStructure(creep, structure, useCounter) {
 		creepEnergyAmount = creep.energy;
 		let transferReturnMessage = creep.transfer(structure, RESOURCE_ENERGY);
 		if (transferReturnMessage == OK) {
-			return OK;
+			return transferReturnMessage;
 			if (useCounter != true) {
 
 				//Memory.rooms[this.memory.home].EnergyIncome = Memory.rooms[this.memory.home].EnergyIncome + creepEnergyAmount;
@@ -232,6 +234,7 @@ function transferEnergyToStructure(creep, structure, useCounter) {
 		else {
 			creep.say("Error :" + transferReturnMessage);
 		}
+		return transferReturnMessage;
 	} else {
 		creep.say("!");
 		return null;
