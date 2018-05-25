@@ -49,7 +49,8 @@ module.exports = {
 
 		// if creep is supposed to harvest energy from source
 		else {
-			if (creep.memory.home != undefined && creep.room.name != creep.memory.home) {
+			if (creep.room.name != creep.memory.home.name) {
+				
 				// if target is defined and creep is not in target room
 				// find exit to target room
 				var exit = creep.room.findExitTo(creep.memory.home);
