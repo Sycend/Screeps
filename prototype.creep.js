@@ -109,7 +109,7 @@ function withdrawFromContainer(creep) {
 		filter: s => (s.structureType == STRUCTURE_CONTAINER)
 			&& s.store[RESOURCE_ENERGY] > creep.carryCapacity / 3
 	});
-	let withdrawReturnMessage = withdrawEnergyFromStructure(creep, structure);
+		let withdrawReturnMessage = withdrawEnergyFromStructure(creep, structure);
 	return withdrawReturnMessage;
 }
 
@@ -121,7 +121,7 @@ function withdrawEnergyFromStructure(creep, structure) {
 			
 		} else if (withdrawReturnMessage == ERR_NOT_IN_RANGE) {
 			// If the container is not in range, move towards it.
-			creep.moveTo(withdrawReturnMessage, { maxRooms: 1 });
+			creep.moveTo(structure, { maxRooms: 1 });
 		} else {
 			creep.say("Error: " + withdrawReturnMessage);
 		}
@@ -156,7 +156,6 @@ function transferEnergyToStorage(creep) {
 		)
 	});
 	transferReturnMessage = transferEnergyToStructure(creep, structure, true);
-	creep.say(transferReturnMessage);
 	return transferReturnMessage;
 }
 
