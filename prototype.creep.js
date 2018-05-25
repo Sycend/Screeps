@@ -1,4 +1,6 @@
-/** Define existing Roles here. */
+/**
+ * Define existing Roles here.
+ */
 var roles = {
 	H: require('role.harvester'),
 	M: require('role.miner'),
@@ -16,6 +18,10 @@ var roles = {
  */
 Creep.prototype.runRole = function () {
 	roles[this.memory.role].run(this);
+	if (this.memory.energyOld != null) {
+		Game.rooms[this.memory.home].memory.energyIncome = Game.rooms[this.memory.home].memory.energyIncome + _.sum(creep.carry) - this.memory.energyOld;
+		this.memory.energyOld = null;
+	}
 };
 
 /**
@@ -109,16 +115,24 @@ function withdrawFromContainer(creep) {
 		filter: s => (s.structureType == STRUCTURE_CONTAINER)
 			&& s.store[RESOURCE_ENERGY] > creep.carryCapacity / 3
 	});
-		let withdrawReturnMessage = withdrawEnergyFromStructure(creep, structure);
+	let withdrawReturnMessage = withdrawEnergyFromStructure(creep, structure);
 	return withdrawReturnMessage;
 }
-
+/**
+ * Withdraws Energy from given Structure.
+ * @param creep
+ * @param structure
+ * @returns
+ */
 function withdrawEnergyFromStructure(creep, structure) {
 	if (structure != null) {
-		// try to withdraw energy
+
+
 		let withdrawReturnMessage = creep.withdraw(structure, RESOURCE_ENERGY);
 		if (withdrawReturnMessage == OK) {
-			
+			if (creep.memory.role == 'C') {
+				creep.memory.energyOld = _.sum(creep.carry);
+			}
 		} else if (withdrawReturnMessage == ERR_NOT_IN_RANGE) {
 			// If the container is not in range, move towards it.
 			creep.moveTo(structure, { maxRooms: 1 });
@@ -132,7 +146,10 @@ function withdrawEnergyFromStructure(creep, structure) {
 	}
 
 }
-
+/**
+ * 
+ * @param creep
+ */
 function findAndPickUpLoot(creep) {
 	let loot = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
 	if (creep.pickup(loot) != OK) {
