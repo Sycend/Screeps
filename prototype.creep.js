@@ -59,39 +59,26 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
  * @param useSource Can use Source.
  */
 Creep.prototype.getEnergy = function (useLoot, useContainer, useStorage, useSource) {
-	let structure = null;
-	structure = this.room.find(FIND_MY_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_STORAGE) });
-	if (structure == "") {
+	let structures = null;
+	// If no Storage exists, use Container instead.
+	structures = this.room.find(FIND_MY_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_STORAGE) });
+	if (structures == null) {
 		useContainer = true;
 	}
-	structure = null;
-	// If the creep should look for loot.
-	useLoot = useContainer;
-	if (useLoot && structure == undefined) {
-		loot = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
-		if (this.pickup(loot) != OK) {
-			this.moveTo(loot);
-		} else {
-			this.say("Loot! o.o")
-		}
+
+
+	let withdrawReturnMessage = null;
+
+	if (useLoot) {
+		findAndPickUpLoot(this);
 	}
 
-	// If the creep should look for containers.
-	if (useContainer && structure == undefined) {
-		// find closest container.
-		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-			filter: s => (s.structureType == STRUCTURE_CONTAINER)
-				&& s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
-		});
+	if (useContainer && withdrawReturnMessage == null) {
+		withdrawReturnMessage = withdrawFromContainer(this);
 	}
 
-	// If the creep should look for storages.
-	if (useStorage && structure == undefined) {
-		// find closest storage.
-		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-			filter: s => (s.structureType == STRUCTURE_STORAGE)
-				&& s.store[RESOURCE_ENERGY] > this.carryCapacity / 10
-		});
+	if (useStorage && withdrawReturnMessage == null) {
+		withdrawReturnMessage = withdrawFromStorage(this);
 	}
 
 	// If the creep should look for sources.
@@ -106,17 +93,54 @@ Creep.prototype.getEnergy = function (useLoot, useContainer, useStorage, useSour
 		}
 	}
 
-	// If creep found something.
-	if (structure != undefined) {
-		// try to withdraw energy, if the container is not in range
-		if (this.withdraw(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-			// move towards it
-			this.moveTo(structure, { maxRooms: 1 });
+};
+
+function withdrawFromStorage(creep) {
+	let structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+		filter: s => (s.structureType == STRUCTURE_STORAGE)
+			&& s.store[RESOURCE_ENERGY] > creep.carryCapacity / 10
+	});
+	let withdrawReturnMessage = withdrawEnergyFromStructure(creep, structure);
+	return withdrawReturnMessage;
+}
+
+function withdrawFromContainer(creep) {
+	let structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+		filter: s => (s.structureType == STRUCTURE_CONTAINER)
+			&& s.store[RESOURCE_ENERGY] > creep.carryCapacity / 3
+	});
+	let withdrawReturnMessage = withdrawEnergyFromStructure(creep, structure);
+	return withdrawReturnMessage;
+}
+
+function withdrawEnergyFromStructure(creep, structure) {
+	if (structure != null) {
+		// try to withdraw energy
+		let withdrawReturnMessage = creep.withdraw(structure, RESOURCE_ENERGY);
+		if (withdrawReturnMessage == OK) {
+			return OK;
+		} else if (withdrawReturnMessage == ERR_NOT_IN_RANGE) {
+			// If the container is not in range, move towards it.
+			creep.moveTo(withdrawReturnMessage, { maxRooms: 1 });
+		} else {
+			creep.say("Error: " + withdrawReturnMessage);
 		}
 	} else {
-		this.say("?");
+		creep.say("?");
+		return null;
 	}
-};
+
+}
+
+function findAndPickUpLoot(creep) {
+	let loot = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
+	if (creep.pickup(loot) != OK) {
+		creep.moveTo(loot);
+	}
+	else {
+		creep.say("Loot! o.o");
+	}
+}
 
 /**
  * Tries to transfer energy to storage.
