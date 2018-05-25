@@ -51,7 +51,7 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
 	}
 
 }
-	* 
+	
 /**
  * Collect energy from loot/container/storage/source.
  * @param useContainer Can use Container.
