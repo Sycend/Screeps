@@ -1,3 +1,4 @@
+/** Define existing Roles here. */
 var roles = {
 	H: require('role.harvester'),
 	M: require('role.miner'),
@@ -29,6 +30,7 @@ Creep.prototype.attack = function () {
 
 /**
  * Put energy in container/storage/base.
+ * Creep will use Base if nothing is else is available.
  * @param useContainer Can use Container.
  * @param useStorage Can use Storage.
  * @param useBase Can use Base.
@@ -49,6 +51,7 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
 	}
 
 }
+	* 
 /**
  * Collect energy from loot/container/storage/source.
  * @param useContainer Can use Container.
@@ -115,6 +118,12 @@ Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
 	}
 };
 
+/**
+ * Tries to transfer energy to storage.
+ * @param creep
+ * @param structure 
+ * @returns transfer message.
+ */
 function transferEnergyToStorage(creep, structure) {
 	structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 		filter: (s) => (s.structureType == STRUCTURE_STORAGE
@@ -125,6 +134,12 @@ function transferEnergyToStorage(creep, structure) {
 	return structure;
 }
 
+/**
+ * Tries to transfer energy to container.
+ * @param creep
+ * @param structure 
+ * @returns transfer message.
+ */
 function transferEnergyToContainer(creep, structure) {
 	structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 		filter: (s) => (s.structureType == STRUCTURE_CONTAINER
@@ -134,6 +149,12 @@ function transferEnergyToContainer(creep, structure) {
 	return structure;
 }
 
+/**
+ * Tries to transfer energy to base.
+ * @param creep
+ * @param structure 
+ * @returns transfer message.
+ */
 function transferEnergyToBase(creep, structure) {
 	if (creep.memory.role != 'H') {
 		structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
@@ -160,6 +181,13 @@ function transferEnergyToBase(creep, structure) {
 	return structure;
 }
 
+/**
+ * Tries to transfer energy to structure.
+ * @param creep
+ * @param structure 
+ * @param useCounter Defines if energy counter should be usesd.
+ * @returns transfer message.
+ */
 function transferEnergyToStructure(creep, structure, useCounter) {
 	if (structure != null) {
 		// Try to transfer energy.
@@ -180,35 +208,3 @@ function transferEnergyToStructure(creep, structure, useCounter) {
 	}
 }
 
-/**
- * Finds structure spawn/tower/extension.
- * @param creep Creep that should do the job.
- * @param useBase Creep should use Base.
- * @param structure Previous structures.
- * @returns structure with spawn/tower/extension.
- */
-function getBaseStructure(creep, useBase, structure) {
-	if (useBase && structure == undefined) {
-		if (creep.memory.role != 'H') {
-			structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-				// the second argument for findClosestByPath is an object which takes
-				// a property called filter which can be a function
-				// we use the arrow operator to define it
-				filter: (s) => ((s.structureType == STRUCTURE_SPAWN
-					|| s.structureType == STRUCTURE_TOWER
-					|| s.structureType == STRUCTURE_EXTENSION)
-					&& s.energy < s.energyCapacity)
-			});
-		} else {
-			structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-				// the second argument for findClosestByPath is an object which takes
-				// a property called filter which can be a function
-				// we use the arrow operator to define it
-				filter: (s) => ((s.structureType == STRUCTURE_SPAWN
-					|| s.structureType == STRUCTURE_EXTENSION)
-					&& s.energy < s.energyCapacity)
-			});
-		}
-	}
-	return structure;
-}
