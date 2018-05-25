@@ -8,14 +8,31 @@ require('RoomVisual');
  *  Main iteration Loop.
  */
 module.exports.loop = function () {
-	cleanMemory();
 
+	//console.log("Server activity check");
+
+	cleanMemory();
+	
 	triggerCreepsRoles();
 
 	triggerTurretRole();
 
 	triggerCreepSpawns();
+	
+	triggerTickCounter();
+	
 };
+
+function triggerTickCounter() {
+	if (Memory.ticks == null) {
+		Memory.ticks = 0;
+	}
+	Memory.ticks--;
+	if (Memory.ticks <= 0) {
+		Memory.ticks = 3000;
+
+	}
+}
 
 /**
  * Run spawn logic.

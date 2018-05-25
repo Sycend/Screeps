@@ -33,38 +33,22 @@ Creep.prototype.attack = function () {
  * @param useStorage Can use Storage.
  * @param useBase Can use Base.
  */
-Creep.prototype.putEnergy = function (useContainer, useStorage, useBase, ) {
+Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
 	let structure = null
-	structure = putInBase(this, useBase, structure);
-	if (useStorage && structure == undefined) {
-		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-			filter: (s) => (s.structureType == STRUCTURE_STORAGE
-				// && s.energy < s.energyCapacity
-			)
-		});
-		if (structure != undefined) {
-			useContainer = true;
-		}
+	if (useBase) {
+		structure = transferEnergyToBase(this, structure);
 	}
-	if (useContainer && structure == undefined) {
-		structure = this.pos.findClosestByPath(FIND_STRUCTURES, {
-			filter: (s) => (s.structureType == STRUCTURE_CONTAINER
-				&& _.sum(s.store) < s.storeCapacity
-			)
-		});
-		if (structure != undefined) {
-			structure = putInBase(this, true, structure);
-		}
+	if (useContainer && structure == null) {
+		structure = transferEnergyToContainer(this, structure);
+		console.log(structure);
+	}
+	if (useStorage && structure == null) {
+		structure = transferEnergyToStorage(this, structure);
+	}
+	if (structure == null) {
+		structure = transferEnergyToBase(this, structure);
 	}
 
-	// If creep found one.
-	if (structure != undefined) {
-		// Try to transfer energy.
-		if (this.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-			// If it is not in range move towards it.
-			this.moveTo(structure, { maxRooms: 1 });
-		}
-	}
 }
 /**
  * Collect energy from loot/container/storage/source.
@@ -132,6 +116,71 @@ Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
 	}
 };
 
+function transferEnergyToStorage(creep, structure) {
+	structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+		filter: (s) => (s.structureType == STRUCTURE_STORAGE
+			// && s.energy < s.energyCapacity
+		)
+	});
+	transferEnergyToStructure(creep, structure, true);
+	return structure;
+}
+
+function transferEnergyToContainer(creep, structure) {
+	structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+		filter: (s) => (s.structureType == STRUCTURE_CONTAINER
+			&& _.sum(s.store) < s.storeCapacity)
+	});
+	transferEnergyToStructure(creep, structure, false);
+	return structure;
+}
+
+function transferEnergyToBase(creep, structure) {
+	if (creep.memory.role != 'H') {
+		structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+			// the second argument for findClosestByPath is an object which takes
+			// a property called filter which can be a function
+			// we use the arrow operator to define it
+			filter: (s) => ((s.structureType == STRUCTURE_SPAWN
+				|| s.structureType == STRUCTURE_TOWER
+				|| s.structureType == STRUCTURE_EXTENSION)
+				&& s.energy < s.energyCapacity)
+		});
+	}
+	else {
+		structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+			// the second argument for findClosestByPath is an object which takes
+			// a property called filter which can be a function
+			// we use the arrow operator to define it
+			filter: (s) => ((s.structureType == STRUCTURE_SPAWN
+				|| s.structureType == STRUCTURE_EXTENSION)
+				&& s.energy < s.energyCapacity)
+		});
+	}
+	transferEnergyToStructure(creep, structure, false);
+	return structure;
+}
+
+function transferEnergyToStructure(creep, structure, useCounter) {
+	if (structure != null) {
+		// Try to transfer energy.
+		creepEnergyAmount = creep.energy;
+		let transferReturnMessage = creep.transfer(structure, RESOURCE_ENERGY);
+		if (transferReturnMessage == OK) {
+			if (useCounter != true) {
+				//Memory.rooms[this.memory.home].EnergyIncome = Memory.rooms[this.memory.home].EnergyIncome + creepEnergyAmount;
+			}
+		}
+		else if (transferReturnMessage == ERR_NOT_IN_RANGE) {
+			// If it is not in range move towards it.
+			creep.moveTo(structure, { maxRooms: 1 });
+		}
+		else {
+			creep.say("Error :" + transferReturnMessage);
+		}
+	}
+}
+
 /**
  * Finds structure spawn/tower/extension.
  * @param creep Creep that should do the job.
@@ -139,7 +188,7 @@ Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
  * @param structure Previous structures.
  * @returns structure with spawn/tower/extension.
  */
-function putInBase(creep, useBase, structure) {
+function getBaseStructure(creep, useBase, structure) {
 	if (useBase && structure == undefined) {
 		if (creep.memory.role != 'H') {
 			structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {

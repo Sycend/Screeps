@@ -22,13 +22,13 @@ module.exports = {
                 creep.moveTo(new RoomPosition(25, 25, creep.memory.workInRoom));
             }*/
             // if in home room
-            if (creep.room.name == creep.memory.home) {
+            if (creep.room.name == creep.memory.home.name) {
                 creep.putEnergy(true, true, false);
             }
             // if not in home room...
             else {
                 // find exit to home room
-                var exit = creep.room.findExitTo(creep.memory.home);
+                var exit = creep.room.findExitTo(creep.memory.home.name);
                 // and move to exit
                 creep.moveTo(creep.pos.findClosestByRange(exit));
             }

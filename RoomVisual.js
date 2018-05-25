@@ -6,12 +6,12 @@ const colors = {
     power: '#F53547',
     dark: '#181818',
     outline: '#8FBB93',
-    speechText: '#000000',
-    speechBackground: '#2ccf3b'
+    speechText: '#00ff00',
+	speechBackground: '#181818'
 }
 
-const speechSize = 0.5
-const speechFont = 'Times New Roman'
+const speechSize = 0.4
+const speechFont = 'Electrolize'
 
 RoomVisual.prototype.structure = function (x, y, type, opts = {}) {
     opts = Object.assign({
