@@ -129,13 +129,6 @@ module.exports = function () {
      * @returns Spawned creep message.
      */
 	StructureSpawn.prototype.createCustomCreep = function (energyAvailable, roleName, sourceId = null) {
-	    /// <summary>
-	    /// 
-	    /// </summary>
-	    /// <param name="energyAvailable"></param>
-	    /// <param name="roleName"></param>
-	    /// <param name="sourceId = null"></param>
-	    /// <returns type=""></returns>
 		let creepNumber = Memory.numberOfCreep;
 		let body = [];
 		if (roleName == 'M') {
