@@ -8,7 +8,7 @@ StructureTower.prototype.defend =
             // ...FIRE!
             this.attack(target);
         } else {
-            if (this.energy > ((this.energyCapacity / 10) * 9)) {
+            if (this.energy > ((this.energyCapacity / 10) * 8)) {
                 var closestDamagedStructure = this.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART
                 });
