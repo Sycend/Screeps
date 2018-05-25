@@ -25,7 +25,7 @@ module.exports.loop = function () {
 
 function triggerTickCounter() {
 	let tickRate = 1500;
-	console.log(Game.time % tickRate);
+	//console.log(Game.time % tickRate);
 
 	//Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncome
 
