@@ -40,7 +40,6 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
 	}
 	if (useContainer && structure == null) {
 		structure = transferEnergyToContainer(this, structure);
-		console.log(structure);
 	}
 	if (useStorage && structure == null) {
 		structure = transferEnergyToStorage(this, structure);
@@ -131,7 +130,7 @@ function transferEnergyToContainer(creep, structure) {
 		filter: (s) => (s.structureType == STRUCTURE_CONTAINER
 			&& _.sum(s.store) < s.storeCapacity)
 	});
-	transferEnergyToStructure(creep, structure, false);
+	transferEnergyToStructure(creep, structure, true);
 	return structure;
 }
 
