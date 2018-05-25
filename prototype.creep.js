@@ -47,7 +47,7 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
 		transferReturnMessage = transferEnergyToStorage(this);
 	}
 	if (transferReturnMessage == null) {
-		transferReturnMessage = transferEnergyToBase(this,);
+		transferReturnMessage = transferEnergyToBase(this);
 	}
 
 }
@@ -58,7 +58,7 @@ Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
  * @param useStorage Can use Storage.
  * @param useSource Can use Source.
  */
-Creep.prototype.getEnergy = function (useContainer, useStorage, useSource) {
+Creep.prototype.getEnergy = function (useLoot, useContainer, useStorage, useSource) {
 	let structure = null;
 	structure = this.room.find(FIND_MY_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_STORAGE) });
 	if (structure == "") {
@@ -130,7 +130,7 @@ function transferEnergyToStorage(creep, structure) {
 			// && s.energy < s.energyCapacity
 		)
 	});
-	transferReturnMessage=transferEnergyToStructure(creep, structure, true);
+	transferReturnMessage = transferEnergyToStructure(creep, structure, true);
 	return transferReturnMessage;
 }
 
@@ -197,7 +197,7 @@ function transferEnergyToStructure(creep, structure, useCounter) {
 		if (transferReturnMessage == OK) {
 			return OK;
 			if (useCounter != true) {
-				
+
 				//Memory.rooms[this.memory.home].EnergyIncome = Memory.rooms[this.memory.home].EnergyIncome + creepEnergyAmount;
 			}
 		}

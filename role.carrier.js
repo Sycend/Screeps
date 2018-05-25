@@ -24,9 +24,9 @@ module.exports = {
 					&& s.energy < s.energyCapacity
 			});
 			if (structure != "") {
-				creep.getEnergy(true, true, false);
+				creep.getEnergy(true, true, true, false);
 			} else {
-				creep.getEnergy(true, false, false);
+				creep.getEnergy(true, true, false, false);
 			}
 		}
 	}
