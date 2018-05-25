@@ -17,7 +17,7 @@ module.exports = {
             creep.harvest(sourceId);
         }		else {
 			 // If creep is not on top of the container.
-            creep.moveTo(container);
+			creep.moveTo(container, { maxRooms: 1 });
         }
     }
 };

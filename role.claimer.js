@@ -14,7 +14,7 @@
 			// Try to claim controller.
 			if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 				// Move towards the controller.
-				creep.moveTo(creep.room.controller);
+				creep.moveTo(creep.room.controller, { maxRooms: 1 });
 			}
 		}
 	}

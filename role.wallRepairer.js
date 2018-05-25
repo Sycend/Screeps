@@ -26,7 +26,7 @@ module.exports = {
 
             if (!target == 0) {
                 if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
+					creep.moveTo(target, { maxRooms: 1 });
                 }
             }
             // if we can't fine one

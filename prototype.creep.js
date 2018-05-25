@@ -31,8 +31,8 @@ Creep.prototype.runRole = function () {
 Creep.prototype.attack = function () {
 	var enemies = this.room.find(Game.HOSTILE_CREEPS);
 	console.log('Attacker found @ ' + this.room.name + ': ' + Game.HOSTILE_CREEPS);
-	this.moveTo(enemies[0]);
-	this.attack(enemies[0]);
+	this.moveTo(enemies[0], { maxRooms: 1 });
+	this.attack(enemies[0], { maxRooms: 1 });
 }
 
 /**
@@ -154,7 +154,7 @@ function withdrawEnergyFromStructure(creep, structure) {
 function findAndPickUpLoot(creep) {
 	let loot = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: s => (s.energy > 100) });
 	if (creep.pickup(loot) != OK) {
-		creep.moveTo(loot);
+		creep.moveTo(loot, { maxRooms: 1 });
 	}
 	else {
 		creep.say("Loot! o.o");
