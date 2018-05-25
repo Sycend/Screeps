@@ -12,15 +12,15 @@ module.exports.loop = function () {
 	//console.log("Server activity check");
 
 	cleanMemory();
-	
+
 	triggerCreepsRoles();
 
 	triggerTurretRole();
 
 	triggerCreepSpawns();
-	
+
 	triggerTickCounter();
-	
+
 };
 
 function triggerTickCounter() {
@@ -62,8 +62,10 @@ function triggerTurretRole() {
  * For each creep run role logic.
  */
 function triggerCreepsRoles() {
-	for (let allCreeps in Game.creeps) {
-		Game.creeps[allCreeps].runRole();
+	for (let creep in Game.creeps) {
+		if (creep.spawning == false) {
+			Game.creeps[creep].runRole();
+		}
 	}
 }
 
