@@ -24,7 +24,7 @@ module.exports = {
 		}
 		// If creep is supposed to harvest energy from source.
 		else {
-			creep.getEnergy(true, false, false, true);
+			creep.getEnergy(true, true, false, true);
 		}
 	}
 };

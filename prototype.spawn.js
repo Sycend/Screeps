@@ -64,6 +64,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 			}
 		} else {
 			// Spawn a carrier if miner exists.
+			
 			nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
 			// If spawning failed.
 			if (nameOfSpawnedCreep == ERR_NOT_ENOUGH_ENERGY) {
@@ -72,8 +73,9 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 				console.log("@" + this.name + ": To less energy: " + this.room.energyAvailable);
 			}
 		}
-
+	
 	} else if (numberOfCreeps['M'] < minimumNumberOfMiners) {
+	
 		// Check if all sources have miners.
 		let sources = room.find(FIND_SOURCES);
 		// Iterate over all sources.

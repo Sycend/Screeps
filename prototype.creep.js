@@ -17,11 +17,12 @@ var roles = {
  * Execute role for each creep.
  */
 Creep.prototype.runRole = function () {
-	roles[this.memory.role].run(this);
 	if (this.memory.energyOld != null) {
-		Game.rooms[this.memory.home].memory.energyIncome = Game.rooms[this.memory.home].memory.energyIncome + _.sum(creep.carry) - this.memory.energyOld;
+		console.log(this.memory.energyOld + "asd" + _.sum(this.carry));
+		Game.rooms[this.memory.home.name].memory.energyIncome = Game.rooms[this.memory.home.name].memory.energyIncome + _.sum(this.carry) - this.memory.energyOld;
 		this.memory.energyOld = null;
 	}
+	roles[this.memory.role].run(this);
 };
 
 /**
@@ -88,7 +89,7 @@ Creep.prototype.getEnergy = function (useLoot, useContainer, useStorage, useSour
 	}
 
 	// If the creep should look for sources.
-	if (useSource) {
+	if (useSource && withdrawReturnMessage == null) {
 		// find closest source
 		var source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
 
