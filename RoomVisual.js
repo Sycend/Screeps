@@ -330,6 +330,40 @@ RoomVisual.prototype.connectRoads = function (opts = {}) {
     return this;
 }
 
+RoomVisual.prototype.speechTransparent = function (text, x, y, opts = {}) {
+	var background = !!opts.background ? opts.background : colors.speechBackground
+	var textcolor = !!opts.textcolor ? opts.textcolor : colors.speechText
+	var textstyle = !!opts.textstyle ? opts.textstyle : false
+	var textsize = !!opts.textsize ? opts.textsize : speechSize
+	var textfont = !!opts.textfont ? opts.textfont : speechFont
+	var opacity = !!opts.opacity ? opts.opacity : 1
+
+	var fontstring = ''
+	if (textstyle) {
+		fontstring = textstyle + ' '
+	}
+	fontstring += textsize + ' ' + textfont
+
+	let pointer = [
+		[-0.2, -0.8],
+		[0.2, -0.8],
+		[0, -0.3]
+	]
+	pointer = relPoly(x, y, pointer)
+	pointer.push(pointer[0])
+
+	
+
+	this.text(text, x, y - 1, {
+		color: textcolor,
+	//	backgroundColor: background,
+		backgroundPadding: 0.1,
+		opacity: opacity,
+		font: fontstring
+	})
+
+	return this;
+}
 
 RoomVisual.prototype.speech = function (text, x, y, opts = {}) {
     var background = !!opts.background ? opts.background : colors.speechBackground

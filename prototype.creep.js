@@ -17,12 +17,13 @@ var roles = {
  * Execute role for each creep.
  */
 Creep.prototype.runRole = function () {
-	if (this.memory.energyOld != null) {
-		console.log(this.memory.energyOld + "asd" + _.sum(this.carry));
-		Game.rooms[this.memory.home.name].memory.energyIncome = Game.rooms[this.memory.home.name].memory.energyIncome + _.sum(this.carry) - this.memory.energyOld;
-		this.memory.energyOld = null;
+	if (this.memory.energyOldMiners != null) {
+		console.log(this.carry[RESOURCE_ENERGY]);
+		Game.rooms[this.memory.home.name].memory.energyIncomeMiners = Game.rooms[this.memory.home.name].memory.energyIncomeMiners + this.carry[RESOURCE_ENERGY] - this.memory.energyOldMiners;
+		this.memory.energyOldMiners = null;
 	}
 	roles[this.memory.role].run(this);
+	//this.say(this.carry[RESOURCE_ENERGY]);
 };
 
 /**
@@ -132,7 +133,8 @@ function withdrawEnergyFromStructure(creep, structure) {
 		let withdrawReturnMessage = creep.withdraw(structure, RESOURCE_ENERGY);
 		if (withdrawReturnMessage == OK) {
 			if (creep.memory.role == 'C') {
-				creep.memory.energyOld = _.sum(creep.carry);
+				creep.say(creep.carry[RESOURCE_ENERGY]);
+				creep.memory.energyOldMiners = creep.carry[RESOURCE_ENERGY];
 			}
 		} else if (withdrawReturnMessage == ERR_NOT_IN_RANGE) {
 			// If the container is not in range, move towards it.

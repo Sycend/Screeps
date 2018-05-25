@@ -24,13 +24,17 @@ module.exports.loop = function () {
 };
 
 function triggerTickCounter() {
-	if (Memory.ticks == null) {
-		Memory.ticks = 0;
-	}
-	Memory.ticks--;
-	if (Memory.ticks <= 0) {
-		Memory.ticks = 3000;
 
+	console.log(Game.time %3000); 
+
+	//Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncome
+
+	if (Game.time % 3000 == 0) {
+		for (let allSpawns in Game.spawns) {
+			console.log("reset");
+			Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTickMiners = Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomeMiners / 3000;
+			Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncome = 0;
+		}
 	}
 }
 
@@ -40,6 +44,9 @@ function triggerTickCounter() {
 function triggerCreepSpawns() {
 	// For each spawn
 	for (let allSpawns in Game.spawns) {
+		Game.spawns[allSpawns].room.visual.speechTransparent("   Income", 38, 16);
+		Game.spawns[allSpawns].room.visual.speechTransparent("   Miner " + (Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTickMiners).toFixed(3), 38, 17);
+		Game.spawns[allSpawns].room.visual.speechTransparent("   LDH  " + Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTick, 38, 18);
 		// Run spawn logic.
 		Game.spawns[allSpawns].spawnCreepsIfNecessary();
 	}
@@ -64,12 +71,12 @@ function triggerTurretRole() {
 function triggerCreepsRoles() {
 	for (let oneCreep in Game.creeps) {
 		if (oneCreep.spawning) {
-			console.log( "hio");
+			console.log("hio");
 		}
-		
-	//	if (creep.spawning == false) {
-			Game.creeps[oneCreep].runRole();
-	//	}
+
+		//	if (creep.spawning == false) {
+		Game.creeps[oneCreep].runRole();
+		//	}
 	}
 }
 
