@@ -133,7 +133,6 @@ function withdrawEnergyFromStructure(creep, structure) {
 		let withdrawReturnMessage = creep.withdraw(structure, RESOURCE_ENERGY);
 		if (withdrawReturnMessage == OK) {
 			if (creep.memory.role == 'C') {
-				creep.say(creep.carry[RESOURCE_ENERGY]);
 				creep.memory.energyOldMiners = creep.carry[RESOURCE_ENERGY];
 			}
 		} else if (withdrawReturnMessage == ERR_NOT_IN_RANGE) {

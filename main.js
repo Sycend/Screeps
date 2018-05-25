@@ -25,15 +25,19 @@ module.exports.loop = function () {
 
 function triggerTickCounter() {
 
-	console.log(Game.time %3000); 
+	console.log(Game.time % 1500);
 
 	//Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncome
 
-	if (Game.time % 3000 == 0) {
+	if (Game.time % 1500 == 0) {
 		for (let allSpawns in Game.spawns) {
 			console.log("reset");
-			Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTickMiners = Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomeMiners / 3000;
+			Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTickMiners = Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomeMiners / 1500;
 			Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncome = 0;
+			let controllerProgressOld = Game.rooms[Game.spawns[allSpawns].room.name].memory.controllerProgress;
+			Game.rooms[Game.spawns[allSpawns].room.name].memory.controllerProgress = Game.rooms[Game.spawns[allSpawns].room.name].controller.progress;
+			
+			Game.rooms[Game.spawns[allSpawns].room.name].memory.controllerProgressPerTick = Game.rooms[Game.spawns[allSpawns].room.name].controller.progress - controllerProgressOld;
 		}
 	}
 }
@@ -46,7 +50,8 @@ function triggerCreepSpawns() {
 	for (let allSpawns in Game.spawns) {
 		Game.spawns[allSpawns].room.visual.speechTransparent("   Income", 38, 16);
 		Game.spawns[allSpawns].room.visual.speechTransparent("   Miner " + (Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTickMiners).toFixed(3), 38, 17);
-		Game.spawns[allSpawns].room.visual.speechTransparent("   LDH  " + Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTick, 38, 18);
+		Game.spawns[allSpawns].room.visual.speechTransparent("   Controller  " + Game.rooms[Game.spawns[allSpawns].room.name].memory.controllerProgressPerTick , 38, 18);
+
 		// Run spawn logic.
 		Game.spawns[allSpawns].spawnCreepsIfNecessary();
 	}
