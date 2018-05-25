@@ -36,22 +36,22 @@ Creep.prototype.attack = function () {
  * @param useBase Can use Base.
  */
 Creep.prototype.putEnergy = function (useContainer, useStorage, useBase) {
-	let structure = null
+	let transferReturnMessage = null
 	if (useBase) {
-		structure = transferEnergyToBase(this, structure);
+		transferReturnMessage = transferEnergyToBase(this);
 	}
-	if (useContainer && structure == null) {
-		structure = transferEnergyToContainer(this, structure);
+	if (useContainer && transferReturnMessage == null) {
+		transferReturnMessage = transferEnergyToContainer(this);
 	}
-	if (useStorage && structure == null) {
-		structure = transferEnergyToStorage(this, structure);
-			}
-	if (structure == null) {
-		structure = transferEnergyToBase(this, structure);
+	if (useStorage && transferReturnMessage == null) {
+		transferReturnMessage = transferEnergyToStorage(this);
+	}
+	if (transferReturnMessage == null) {
+		transferReturnMessage = transferEnergyToBase(this,);
 	}
 
 }
-	
+
 /**
  * Collect energy from loot/container/storage/source.
  * @param useContainer Can use Container.
@@ -130,8 +130,8 @@ function transferEnergyToStorage(creep, structure) {
 			// && s.energy < s.energyCapacity
 		)
 	});
-	transferEnergyToStructure(creep, structure, true);
-	return structure;
+	transferReturnMessage=transferEnergyToStructure(creep, structure, true);
+	return transferReturnMessage;
 }
 
 /**
@@ -140,13 +140,13 @@ function transferEnergyToStorage(creep, structure) {
  * @param structure 
  * @returns transfer message.
  */
-function transferEnergyToContainer(creep, structure) {
-	structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+function transferEnergyToContainer(creep) {
+	let structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 		filter: (s) => (s.structureType == STRUCTURE_CONTAINER
 			&& _.sum(s.store) < s.storeCapacity)
 	});
-	transferEnergyToStructure(creep, structure, true);
-	return structure;
+	let transferReturnMessage = transferEnergyToStructure(creep, structure, true);
+	return transferReturnMessage;
 }
 
 /**
@@ -155,7 +155,8 @@ function transferEnergyToContainer(creep, structure) {
  * @param structure 
  * @returns transfer message.
  */
-function transferEnergyToBase(creep, structure) {
+function transferEnergyToBase(creep) {
+	let structure;
 	if (creep.memory.role != 'H') {
 		structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
 			// the second argument for findClosestByPath is an object which takes
@@ -177,8 +178,8 @@ function transferEnergyToBase(creep, structure) {
 				&& s.energy < s.energyCapacity)
 		});
 	}
-	transferEnergyToStructure(creep, structure, false);
-	return structure;
+	let transferReturnMessage = transferEnergyToStructure(creep, structure, false);
+	return transferReturnMessage;
 }
 
 /**
@@ -194,7 +195,9 @@ function transferEnergyToStructure(creep, structure, useCounter) {
 		creepEnergyAmount = creep.energy;
 		let transferReturnMessage = creep.transfer(structure, RESOURCE_ENERGY);
 		if (transferReturnMessage == OK) {
+			return OK;
 			if (useCounter != true) {
+				
 				//Memory.rooms[this.memory.home].EnergyIncome = Memory.rooms[this.memory.home].EnergyIncome + creepEnergyAmount;
 			}
 		}
@@ -205,6 +208,9 @@ function transferEnergyToStructure(creep, structure, useCounter) {
 		else {
 			creep.say("Error :" + transferReturnMessage);
 		}
+	} else {
+		creep.say("!");
+		return null;
 	}
 }
 
