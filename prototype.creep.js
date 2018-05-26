@@ -6,6 +6,7 @@ var roles = {
 	M: require('role.miner'),
 	U: require('role.upgrader'),
 	B: require('role.builder'),
+	LDB: require('role.builder'),
 	R: require('role.repairer'),
 	WR: require('role.wallRepairer'),
 	C: require('role.carrier'),
