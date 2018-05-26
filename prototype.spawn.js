@@ -182,6 +182,18 @@ module.exports = function () {
 			for (let i = 0; i < numberOfParts; i++) {
 				body.push(MOVE);
 			}
+		} else if (roleName == 'LDB') {
+			let numberOfParts = Math.floor(energyAvailable / 200);
+
+			for (let i = 0; i < numberOfParts; i++) {
+				body.push(WORK);
+			}
+			for (let i = 0; i < numberOfParts; i++) {
+				body.push(CARRY);
+			}
+			for (let i = 0; i < numberOfParts; i++) {
+				body.push(MOVE);
+			}
 		} else {
 			// Create a balanced body as big as possible with the given energy divided by two.
 			let numberOfParts = Math.floor(energyAvailable / 200 / 2);

@@ -49,8 +49,8 @@ function triggerTickCounter() {
 function triggerCreepSpawns() {
 	// For each spawn
 	for (let allSpawns in Game.spawns) {
-		Game.spawns[allSpawns].room.visual.speechTransparent("   Income " + (Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTick).toFixed(3), 38, 17);
-		Game.spawns[allSpawns].room.visual.speechTransparent("   Controller  " + Game.rooms[Game.spawns[allSpawns].room.name].memory.controllerProgressPerTick, 38, 18);
+		Game.spawns[allSpawns].room.visual.speechTransparent("   Income " + (Game.rooms[Game.spawns[allSpawns].room.name].memory.energyIncomePerTick).toFixed(2), 38, 17);
+		Game.spawns[allSpawns].room.visual.speechTransparent("   Controller  " + Game.rooms[Game.spawns[allSpawns].room.name].memory.controllerProgressPerTick.toFixed(2), 38, 18);
 
 		// Run spawn logic.
 		Game.spawns[allSpawns].spawnCreepsIfNecessary();
