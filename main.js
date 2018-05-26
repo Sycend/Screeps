@@ -17,10 +17,10 @@ module.exports.loop = function () {
 
 	triggerTurretRole();
 
-	triggerCreepSpawns();
+	
 
 	triggerTickCounter();
-
+	triggerCreepSpawns();
 };
 
 function triggerTickCounter() {
