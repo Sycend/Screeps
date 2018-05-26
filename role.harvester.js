@@ -18,8 +18,10 @@ module.exports = {
 			// Only if role Carrier exists.
 			if (_.sum(Game.creeps, (c) => c.memory.role == 'C' && c.memory.home.name == creep.memory.home.name) > 0) {
 				creep.putEnergy(true, false, false);
+				
 			} else {
 				creep.putEnergy(false, false, true);
+			
 			}
 		}
 		// If creep is supposed to harvest energy from source.
