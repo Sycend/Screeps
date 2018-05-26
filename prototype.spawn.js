@@ -183,15 +183,15 @@ module.exports = function () {
 				body.push(MOVE);
 			}
 		} else if (roleName == 'LDB') {
-			let numberOfParts = Math.floor(energyAvailable / 200);
+			let numberOfParts = Math.floor(energyAvailable / 300);
 
 			for (let i = 0; i < numberOfParts; i++) {
 				body.push(WORK);
 			}
-			for (let i = 0; i < numberOfParts; i++) {
+			for (let i = 0; i < numberOfParts*2; i++) {
 				body.push(CARRY);
 			}
-			for (let i = 0; i < numberOfParts; i++) {
+			for (let i = 0; i < numberOfParts*2; i++) {
 				body.push(MOVE);
 			}
 		} else {
