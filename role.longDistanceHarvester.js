@@ -1,8 +1,5 @@
 module.exports = {
-	/**
-	 * 
-	 * @param creep
-	 */
+	// a function to run the logic for this role
 	run: function (creep) {
 		// if creep is bringing energy to a structure but has no energy left
 		if (creep.memory.working == true && creep.carry.energy == 0) {
@@ -16,12 +13,8 @@ module.exports = {
 		}
 		// if attacker is in room -> Attack
 		if (creep.room.find(Game.HOSTILE_CREEPS) > 0) {
-			const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-			if (target) {
-				if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(target);
-				}
-			}
+			console.log(creep.room.find(Game.HOSTILE_CREEPS));
+			creep.attack();
 		}
 		// if creep is supposed to transfer energy to a structure
 		else if (creep.memory.working == true) {

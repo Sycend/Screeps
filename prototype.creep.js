@@ -30,6 +30,7 @@ Creep.prototype.runRole = function () {
  * Attacks enemy if in room.
  */
 Creep.prototype.attack = function () {
+	
 	var enemies = this.room.find(Game.HOSTILE_CREEPS);
 	console.log('Attacker found @ ' + this.room.name + ': ' + Game.HOSTILE_CREEPS);
 	this.moveTo(enemies[0], { maxRooms: 1 });
