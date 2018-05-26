@@ -12,9 +12,11 @@ module.exports = {
 			creep.memory.working = true;
 		}
 		// if attacker is in room -> Attack
-		if (creep.room.find(Game.HOSTILE_CREEPS) > 0) {
-			console.log(creep.room.find(Game.HOSTILE_CREEPS))
-			creep.attack();
+		const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+		if (target) {
+			if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+				creep.moveTo(target);
+			}
 		}
 		// if creep is supposed to transfer energy to a structure
 		else if (creep.memory.working == true) {
