@@ -104,13 +104,13 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier / 2) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
 	} else if (numberOfLongDistanceBuilderW7N4 < minimumNumberOfLongDistanceBuilderW7N4 && this.room.name == "W7N3") {
-		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'LDB', null, 'W7N4');
+				nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'LDB', null, 'W7N4');
 	} else if (numberOfLongDistanceHarvestersW7N4 < minimumNumberOfLongDistanceHarvestersW7N4 && this.room.name == "W7N3") {
 		nameOfSpawnedCreep = this.createLongDistanceHarvester(roomEnergyCapacity, 3, 'W7N4', 0);
 	} else if (numberOfLongDistanceHarvestersW8N3 < minimumNumberOfLongDistanceHarvestersW8N3 && this.room.name == "W7N3") {
 		nameOfSpawnedCreep = this.createLongDistanceHarvester(roomEnergyCapacity, 3, 'W8N3', 0);
 	} else if (numberOfLongDistanceHarvestersW6N3 < minimumNumberOfLongDistanceHarvestersW6N3 && this.room.name == "W7N3") {
-
+		nameOfSpawnedCreep = this.createLongDistanceHarvester(roomEnergyCapacity, 3, 'W6N3', 0);
 	} else if (numberOfCreeps['U'] < minimumNumberOfUpgraders) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'U');
 	} else if (numberOfCreeps['R'] < minimumNumberOfRepairers) {
@@ -122,7 +122,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
 	} else {
-		room.visual.speech('All creeps exists.', 39, 15);
+		room.visual.speechTransparent('All creeps exists.', 39, 15);
 	}
 	// Print name to console if spawning was a success.
 	if (nameOfSpawnedCreep != null && !(nameOfSpawnedCreep < 0)) {

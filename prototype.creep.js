@@ -31,10 +31,10 @@ Creep.prototype.runRole = function () {
  */
 Creep.prototype.attack = function () {
 	
-	var enemies = this.room.find(Game.HOSTILE_CREEPS);
-	console.log('Attacker found @ ' + this.room.name + ': ' + Game.HOSTILE_CREEPS);
-	this.moveTo(enemies[0], { maxRooms: 1 });
-	this.attack(enemies[0], { maxRooms: 1 });
+	var enemies = this.room.find(FIND_HOSTILE_CREEPS);
+	console.log('Attacker found @ ' + this.room.name + ': ' + enemies[0]);
+	//this.moveTo(enemies[0], { maxRooms: 1 });
+	//this.attack(enemies[0], { maxRooms: 1 });
 }
 
 /**

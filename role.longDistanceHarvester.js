@@ -12,9 +12,10 @@ module.exports = {
 			creep.memory.working = true;
 		}
 		// if attacker is in room -> Attack
-		if (creep.room.find(Game.HOSTILE_CREEPS) > 0) {
-			console.log(creep.room.find(Game.HOSTILE_CREEPS));
-			creep.attack();
+		
+		if (creep.room.find(FIND_HOSTILE_CREEPS)[0] != undefined) {
+			creep.say(creep.room.find(FIND_HOSTILE_CREEPS)[0]);
+		//	creep.attack();
 		}
 		// if creep is supposed to transfer energy to a structure
 		else if (creep.memory.working == true) {
