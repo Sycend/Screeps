@@ -26,15 +26,15 @@ Creep.prototype.runRole = function () {
 	//this.say(this.carry[RESOURCE_ENERGY]);
 };
 
+
 /**
  * Attacks enemy if in room.
  */
-Creep.prototype.attack = function () {
+Creep.prototype.attack = function (enemies) {
 	
-	var enemies = this.room.find(FIND_HOSTILE_CREEPS);
-	console.log('Attacker found @ ' + this.room.name + ': ' + enemies[0]);
-	//this.moveTo(enemies[0], { maxRooms: 1 });
-	//this.attack(enemies[0], { maxRooms: 1 });
+	console.log('Attacker found @ ' + this.room.name + ': ' + enemies);
+	this.moveTo(enemies, { maxRooms: 1 });
+	this.attack(enemies);
 }
 
 /**
