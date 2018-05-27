@@ -31,7 +31,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	var minimumNumberOfBuilders = 1;
 	var minimumNumberOfRepairers = 1;
 	var minimumNumberOfWallRepairers = 1;
-	var minimumNumberOfLongDistanceHarvestersW7N4 = 2;
+	var minimumNumberOfLongDistanceHarvestersW7N4 = 0;
 	var minimumNumberOfLongDistanceHarvestersW8N3 = 3;
 	var minimumNumberOfLongDistanceHarvestersW6N3 = 3;
 	var minimumNumberOfLongDistanceHarvestersW8N4 = 2;
@@ -148,6 +148,9 @@ module.exports = function () {
 	StructureSpawn.prototype.createCustomCreep = function (energyAvailable, roleName, sourceId = null, target = null) {
 		let creepNumber = Memory.numberOfCreep;
 		let body = [];
+		if (energyAvailable > 1800) {
+			energyAvailable = 1800;
+		}
 		if (roleName == 'M') {
 			var numberOfParts = Math.floor((energyAvailable - 50) / 100);
 			// create maximum work-parts but maximal 10. For greatest efficency.

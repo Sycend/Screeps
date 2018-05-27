@@ -17,7 +17,7 @@ module.exports = {
 		{
 			let enemie =creep.room.find(FIND_HOSTILE_CREEPS)[0];
 			creep.say(enemie);
-			creep.attack(enemie);
+			//creep.attack(enemie);
 		}
 		// if creep is supposed to transfer energy to a structure
 		else if (creep.memory.working == true) {
