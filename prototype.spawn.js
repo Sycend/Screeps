@@ -15,9 +15,10 @@ var listOfRoles = ['H', 'M', 'C', 'U', 'T', 'B', 'WR', 'LDH', 'R', 'CL', 'LDB'];
  */
 StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	let room = this.room;
-	let maxEnergy = room.energyCapacityAvailable;
-	if (maxEnergy > 1800) {
-		maxEnergy = maxEnergy- 1800;
+	let roomEnergyCapacity = this.room.energyCapacityAvailable;
+	let roomEnergyCapacity = room.energyCapacityAvailable;
+	if (roomEnergyCapacity > 1800) {
+		maxEnergy = 1800;
 	}
 	let creepsInRoom = room.find(FIND_MY_CREEPS);
 	let numberOfCreeps = {};
@@ -56,7 +57,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 
 	var numberOfLongDistanceBuilder = _.sum(Game.creeps, (c) => c.memory.role == 'LDB' && c.memory.target == 'W6N3');
 
-	var roomEnergyCapacity = this.room.energyCapacityAvailable;
+	
 	var nameOfSpawnedCreep = null;
 
 
