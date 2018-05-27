@@ -38,7 +38,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	var minimumNumberOfLongDistanceHarvestersW8N3 = 3;
 	var minimumNumberOfLongDistanceHarvestersW6N3 = 3;
 	var minimumNumberOfLongDistanceHarvestersW8N4 = 2;
-	var minimumNumberOfLongDistanceBuilderW7N4 = 0;
+	var minimumNumberOfLongDistanceBuilder = 1;
 	var minimumNumberOfCarrier = 4;
 	var minimumNumberOfClaimer = 0;
 
@@ -54,7 +54,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	var numberOfLongDistanceHarvestersW8N4 = _.sum(Game.creeps, (c) => c.memory.role == 'LDH' && c.memory.target == 'W8N4');
 
 
-	var numberOfLongDistanceBuilderW7N4 = _.sum(Game.creeps, (c) => c.memory.role == 'LDB' && c.memory.target == 'W7N4');
+	var numberOfLongDistanceBuilder = _.sum(Game.creeps, (c) => c.memory.role == 'LDB' && c.memory.target == 'W6N3');
 
 	var roomEnergyCapacity = this.room.energyCapacityAvailable;
 	var nameOfSpawnedCreep = null;
@@ -102,6 +102,12 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 				if (containers.length > 0) {
 					// Spawn a miner.
 					nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'M', source.id);
+
+					if (nameOfSpawnedCreep == ERR_NOT_ENOUGH_ENERGY) {
+						// Spawn one with what is available.
+						nameOfSpawnedCreep = this.createCustomCreep(this.room.energyAvailable, 'M', source.id);
+						console.log("@" + this.name + ": To less energy: " + this.room.energyAvailable);
+					}
 				}
 			}
 		}
@@ -109,8 +115,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 		nameOfSpawnedCreep = this.createClaimer('W7N4');
 	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier / 2) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
-	} else if (numberOfLongDistanceBuilderW7N4 < minimumNumberOfLongDistanceBuilderW7N4 && this.room.name == "W7N3") {
-				nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'LDB', null, 'W7N4');
+	} else if (numberOfLongDistanceBuilder < minimumNumberOfLongDistanceBuilder && this.room.name == "W7N3") {
+				nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'LDB', null, 'W6N3');
 	} else if (numberOfLongDistanceHarvestersW7N4 < minimumNumberOfLongDistanceHarvestersW7N4 && this.room.name == "W7N3") {
 		nameOfSpawnedCreep = this.createLongDistanceHarvester(roomEnergyCapacity, 3, 'W7N4', 0);
 	} else if (numberOfLongDistanceHarvestersW8N3 < minimumNumberOfLongDistanceHarvestersW8N3 && this.room.name == "W7N3") {
@@ -153,7 +159,9 @@ module.exports = function () {
 		let body = [];
 		
 		if (roleName == 'M') {
+		
 			var numberOfParts = Math.floor((energyAvailable - 50) / 100);
+		
 			// create maximum work-parts but maximal 10. For greatest efficency.
 			for (let i = 0; (i < numberOfParts) && (i < 5); i++) {
 				body.push(WORK);
