@@ -32,7 +32,7 @@ module.exports = {
 				let structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
 					filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART
 				});
-				creep.say(structure);
+			
 				if (structure != undefined) {
 					if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
 						// find exit to home room
