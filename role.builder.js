@@ -59,7 +59,7 @@ module.exports = {
 				// return the function to not do anything else
 				return;
 			}
-			creep.getEnergy(false, true, true, false);
+			creep.getEnergy(false, false, true, false);
 		}
 	}
 };

@@ -29,7 +29,7 @@ module.exports = {
 			}
 			// if not in home room...
 			else {
-				let structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+				let structure = creep.pos.findClosestByRange(FIND_STRUCTURES, 1,{
 					filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART
 				});
 
