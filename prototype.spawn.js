@@ -16,6 +16,9 @@ var listOfRoles = ['H', 'M', 'C', 'U', 'T', 'B', 'WR', 'LDH', 'R', 'CL', 'LDB'];
 StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	let room = this.room;
 	let maxEnergy = room.energyCapacityAvailable;
+	if (maxEnergy > 1800) {
+		maxEnergy = 1800;
+	}
 	let creepsInRoom = room.find(FIND_MY_CREEPS);
 	let numberOfCreeps = {};
 	// Count existing creeps per role.
@@ -148,9 +151,7 @@ module.exports = function () {
 	StructureSpawn.prototype.createCustomCreep = function (energyAvailable, roleName, sourceId = null, target = null) {
 		let creepNumber = Memory.numberOfCreep;
 		let body = [];
-		if (energyAvailable > 1800) {
-			energyAvailable = 1800;
-		}
+		
 		if (roleName == 'M') {
 			var numberOfParts = Math.floor((energyAvailable - 50) / 100);
 			// create maximum work-parts but maximal 10. For greatest efficency.
