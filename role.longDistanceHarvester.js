@@ -29,14 +29,16 @@ module.exports = {
 			}
 			// if not in home room...
 			else {
-				let structure = creep.pos.findClosestByRange(FIND_STRUCTURES, 1,{
+				let structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
 					filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART
 				});
-
+				creep.say(structure);
 				if (structure != undefined) {
 					if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
-						// move towards it
-						creep.moveTo(structure);
+						// find exit to home room
+						var exit = creep.room.findExitTo(creep.memory.home.name);
+						// and move to exit
+						creep.moveTo(creep.pos.findClosestByRange(exit));
 					}
 				} else {
 
