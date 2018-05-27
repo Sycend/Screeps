@@ -17,7 +17,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	let room = this.room;
 	let maxEnergy = room.energyCapacityAvailable;
 	if (maxEnergy > 1800) {
-		maxEnergy = 1800;
+		maxEnergy = maxEnergy- 1800;
 	}
 	let creepsInRoom = room.find(FIND_MY_CREEPS);
 	let numberOfCreeps = {};
