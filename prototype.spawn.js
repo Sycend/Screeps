@@ -16,7 +16,7 @@ var listOfRoles = ['H', 'M', 'C', 'U', 'T', 'B', 'WR', 'LDH', 'R', 'CL', 'LDB'];
 StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 	let room = this.room;
 	let roomEnergyCapacity = this.room.energyCapacityAvailable;
-	let roomEnergyCapacity = room.energyCapacityAvailable;
+	
 	if (roomEnergyCapacity > 1800) {
 		maxEnergy = 1800;
 	}
