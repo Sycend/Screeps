@@ -32,7 +32,7 @@ module.exports = {
 				let structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
 					filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART
 				});
-			
+			/*
 				if (structure != undefined) {
 					if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
 						// find exit to home room
@@ -46,7 +46,11 @@ module.exports = {
 					var exit = creep.room.findExitTo(creep.memory.home.name);
 					// and move to exit
 					creep.moveTo(creep.pos.findClosestByRange(exit));
-				}
+				}*/
+				// find exit to home room
+				var exit = creep.room.findExitTo(creep.memory.home.name);
+				// and move to exit
+				creep.moveTo(creep.pos.findClosestByRange(exit));
 			}
 		}
 		// if creep is supposed to harvest energy from source

@@ -125,6 +125,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 		nameOfSpawnedCreep = this.createLongDistanceHarvester(roomEnergyCapacity, 3, 'W6N3', 0);
 	} else if (numberOfLongDistanceHarvestersW8N4 < minimumNumberOfLongDistanceHarvestersW8N4 && this.room.name == "W7N4") {
 		nameOfSpawnedCreep = this.createLongDistanceHarvester(roomEnergyCapacity, 1, 'W8N4', 0);
+	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier) {
+		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
 	} else if (numberOfCreeps['U'] < minimumNumberOfUpgraders) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'U');
 	} else if (numberOfCreeps['R'] < minimumNumberOfRepairers) {
@@ -133,8 +135,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary = function () {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'B');
 	} else if (numberOfCreeps['WR'] < minimumNumberOfWallRepairers) {
 		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'WR');
-	} else if (numberOfCreeps['C'] < minimumNumberOfCarrier) {
-		nameOfSpawnedCreep = this.createCustomCreep(roomEnergyCapacity, 'C');
+
 	} else {
 		room.visual.speechTransparent('All creeps exists.', 39, 15);
 	}
